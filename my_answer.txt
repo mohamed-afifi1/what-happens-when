@@ -1,0 +1,100 @@
+Introduction
+
+This question is a classic and still widely used interview question for many types of software engineering positions. It is used to assess a candidate’s general knowledge of how the web stack works on top of the internet.
+In this blog, we will talk about what happens when you type https://www.google.com in your browser and press Enter.
+
+
+URL parsing
+
+First, the browser will check if the text is a URL or a search in our case it's a URL.
+We are here in the first phase of the OSI model (application layer).
+in this layer, we first specify the protocol (usually on the web it's http or https).
+then we put the port to this protocol (80 for http and 443 for https).
+
+
+DNS resolution
+
+why do we need this layer?
+servers don't understand text so we need to replace the domain name with its IP.
+we try here to minimize our journey to find the IP by searching in the nearest place if we find it we go to the second step if not we continue searching let's explore these places.
+Browser Cache: The browser first checks its cache
+OS Cache: second nearest place if we don't found it
+ISP Cache: If still not found, we go outside our PC or mobile and start search in Internet Service Provider (ISP). It searches in its cache.
+Root Server: The request is forwarded to a root server if the IP is not found in the ISP's cache.
+TLD Server: The root server redirects the ISP to the appropriate Top-Level Domain (TLD) server.
+Authoritative Name Servers: The TLD server directs the ISP to the Authoritative Name Servers responsible for the domain. This is our last place to search for it of course has the IP address of the domain name and provide it to the ISP.
+Cache Update: The ISP saves the IP in its cache for future requests, we don't need to go all this long again to find it.
+usually, for famous domains like Google we find it in the first place.
+
+
+TCP/IP connection
+
+Now we have IP, protocol, and port we are ready to start connecting.
+our connection is called TCP/IP Connection and it has three steps to connect:
+SYN packet: The browser sends it to the server to start the connection
+SYN-ACK packet: the server sends this to the browser
+ACK packet: that is the last thing the browser sends to the server now we are connected
+after this, we now finished the transport layer.
+
+
+HTTPS/SSL
+
+in our example we connected by HTTPS protocol so let's talk about it.
+HTTPS (Hypertext Transfer Protocol Secure) is an extension of HTTP that adds a layer of security to data transmission over the Internet. It utilizes SSL (Secure Sockets Layer) or its successor, TLS (Transport Layer Security), to encrypt data exchanged between the browser and the server.
+now we know the major difference between HTTP and HTTPS is security.
+we need key to encrypt the data transferred so let's talk about what happens when we connect with https server.
+first, we do a process called the Handshake process which negotiates encryption parameters, including the encryption algorithm and cryptographic keys.
+now we had the key, now data transmission begins, all data go from server and clint must be encrypted.
+HTTPS also provides authentication mechanisms to verify the identity of the server to which the browser is connecting.
+
+
+HTTP request:
+
+I know we are talking about HTTPS but after encryption, there is nearly no difference between https and http so you can call it an HTTP request or HTTPS request both are nearly the same.
+http request has these layers let's get them with our example:
+𝗠𝗲𝘁𝗵𝗼𝗱: GET (retrieve a resource)
+𝗨𝗥𝗜: / (the root directory of google.com)
+𝗛𝗲𝗮𝗱𝗲𝗿𝘀:Various headers, such as Host, User-Agent, Accept, and Accept-Language
+𝗕𝗼𝗱𝘆:Empty, since this is a GET request
+
+
+HTTP response
+
+after send the request we must have a response to finally get our webpage response also have some layers lets talk about them:
+𝗦𝘁𝗮𝘁𝘂𝘀 𝗰𝗼𝗱𝗲:200 OK (indicating a successful response)
+𝗛𝗲𝗮𝗱𝗲𝗿𝘀: Various headers, such as Content-Type, Content-Length, and Set-Cookie
+𝗕𝗼𝗱𝘆:The HTML content of the Google homepage
+
+
+Load Balancer
+
+it's not a mandatory step if we have a small website but here we are talking about maybe the biggest website on earth google so it must have more than one server.
+when we finish all our steps and start sending requests to the server we go first to a load balancer then evaluates various factors, such as server health, current load, and proximity to the user, to determine the best server to handle the request.
+Once the load balancer selects a server, it forwards the request to that server, which then processes the request and generates a response.
+
+
+Firewall
+
+In addition to load balancers, another critical component of network security is a firewall.
+it's your garden to the server.
+Firewalls analyze the incoming traffic, inspecting the source and destination addresses, ports, and protocols, to determine whether to allow or block the data packets.
+
+
+Web server
+
+Finally, our request reached the server.
+When the web server receives the request, it processes the URL, including any query parameters, and retrieves the requested content from its storage or database.
+The web server then constructs an HTTP response containing the requested content and sends it back to the client's browser over the established TCP/IP connection.
+
+
+Application Server
+
+Complex web applications like Google Search often rely on application servers to handle dynamic content generation, process user input, and execute business logic.
+When a user submits a search query on the Google homepage, for example, the request is forwarded from the web server to the application server. The application server then executes the necessary algorithms to process the query.
+
+
+Database
+
+Behind the scenes, web applications like Google Search rely on databases to store and manage vast amounts of structured and unstructured data.
+our search in Google is just a query in google database.
+Databases may use various storage engines, indexing mechanisms, and query optimization techniques to efficiently store and retrieve data.
